@@ -30,7 +30,6 @@ export async function storeStepWithScreenshot(step, description, expected) {
     resetCSV();
   }
   const isHeadless = testData.getTestData("headless")
-  const row = ''
 
   stepCounter++;
   const screenshotId = `SC_${String(stepCounter).padStart(3, "0")}`;
@@ -57,7 +56,18 @@ export async function storeStepWithScreenshot(step, description, expected) {
       ])
       .toFile(screenshotPath.replace(".png", "-stamped.png"));
       // Prepare row (NO DATETIME)
-    const row = `"${step}","${description}","${expected}","${screenshotId.replace(".png", "-stamped.png")}"\n`;
+    const row = `"${step}","${description}","${expected}","${screenshotId +"-stamped"}"\n`;
+        // Ensure CSV exists
+    if (!fs.existsSync(CSV_PATH)) {
+      fs.mkdirSync(path.dirname(CSV_PATH), { recursive: true });
+      fs.writeFileSync(
+        CSV_PATH,
+        "Step,Description,Expected,ScreenshotID\n"
+      );
+    }
+
+    // Append new row
+    fs.appendFileSync(CSV_PATH, row);
     }
     else{
       // / Take screenshot
@@ -69,19 +79,18 @@ export async function storeStepWithScreenshot(step, description, expected) {
         console.error("Screenshot failed:", err);
       }
       const row = `"${step}","${description}","${expected}","${screenshotId}"\n`;
+      // Ensure CSV exists
+      if (!fs.existsSync(CSV_PATH)) {
+        fs.mkdirSync(path.dirname(CSV_PATH), { recursive: true });
+        fs.writeFileSync(
+          CSV_PATH,
+          "Step,Description,Expected,ScreenshotID\n"
+        );
+      }
+
+      // Append new row
+      fs.appendFileSync(CSV_PATH, row);
     }
-
-  // Ensure CSV exists
-  if (!fs.existsSync(CSV_PATH)) {
-    fs.mkdirSync(path.dirname(CSV_PATH), { recursive: true });
-    fs.writeFileSync(
-      CSV_PATH,
-      "Step,Description,Expected,ScreenshotID\n"
-    );
-  }
-
-  // Append new row
-  fs.appendFileSync(CSV_PATH, row);
 
   console.log(`STEP STORED: ${step} | ${screenshotId}`);
 }
