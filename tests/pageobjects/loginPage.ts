@@ -12,7 +12,8 @@ export class LoginPage {
   private readonly passwordForLogin = '//input[@id="password"]';
   private readonly loginButton = '//button[@id="submit"]';
   private readonly loggedInSuccessfully = "//div[@class='post-header']//h1[text()='Logged In Successfully']";
-  
+  private readonly enrollmentDropdown = '//div[@id="enrollDropdown"]//div';
+
  
   async gotoUrl(pageFixture) {
     const url = await getTestDataValue("url");
@@ -44,6 +45,30 @@ export class LoginPage {
   async verifyCurrentPage(menu) {
     const homePage = `//div[@class="post-header"]//h1[text()='${menu}']`;
     await expect(pageFixture.page.locator(homePage)).toBeVisible({ timeout: TIMEOUT });
+  }
+
+  async tapOption(option) {
+    const optionLocator = `//p//a[text()= '${option}']`;
+    await pageFixture.page.locator(optionLocator).click();
+  }
+
+  async verifyScreen(screen) {
+    const homePage = `//section//h2[text()='${screen}']`;
+    await expect(pageFixture.page.locator(homePage)).toBeVisible({ timeout: TIMEOUT });
+  }
+
+  async tapRadioButton(button) {
+    const radioButtonLocator = `//input[@value="${button}"]`;
+    await pageFixture.page.locator(radioButtonLocator).click();
+  }
+
+  async tapOnEnrollmentDropdown() {
+    await pageFixture.page.locator(this.enrollmentDropdown).click();
+  }
+
+  async tapOnEnrollmentCount(count) {
+    const enrollmentCountLocator = `//ul[@class="dropdown-menu"]//li[@data-value="${count}"]`
+    await pageFixture.page.locator(enrollmentCountLocator).click();
   }
 
 

@@ -182,4 +182,5 @@ def main():
     create_step_report(rows)
     create_screenshot_report(rows)
 
+if __name__ == "__main__":
     main()

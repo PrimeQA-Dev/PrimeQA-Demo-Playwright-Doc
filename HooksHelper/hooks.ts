@@ -2,7 +2,7 @@ import { BeforeAll, AfterAll, Before, After, Status } from "@cucumber/cucumber";
 import { Browser, BrowserContext, chromium } from "@playwright/test";
 import { pageFixture } from "./pageFixture";
 import { docManager } from "../utils/utils";
-import { pythonCreateReport } from "../utils/docTest";
+import { pythonCreateReport } from "../utils/pyHelper";
 
 import path from "path";
 import fs from "fs";

@@ -4,7 +4,7 @@ import { pageFixture } from "../../HooksHelper/pageFixture";
 import { getTestDataValue } from '../../utils/testDataReader';
 // import { docCreate,docManager } from '../../utils/';
 // import { pythonStoreStep, pythonCreateReport } from "../../utils/docTest";
-import { storeStepWithScreenshot } from "../../utils/read";
+import { storeStepWithScreenshot } from "../../utils/csvHelper";
 
 
 
@@ -45,9 +45,30 @@ Then('user should be navigated to {string} page', async function (menu) {
   
 });
 
+Then('user click on {string}', async function (option) {
+  await loginPage.tapOption(option);
+  await storeStepWithScreenshot("Practice page", `Tap on ${option}`, `${option} should open properly`);
+});
 
 
+Then('user is on {string} screen', async function (screen) {
+  await loginPage.verifyScreen(screen);
+  await storeStepWithScreenshot(`${screen} page`, `verify ${screen} screen`, `${screen} screen should displayed`);
+});
 
 
+Then('user tap on {string} radio button', async function (option) {
+  await loginPage.tapRadioButton(option);
+  await storeStepWithScreenshot("Test page", `Tap on ${option}`, `${option} should selected`);
+});
+
+Then('user tap on enrollment dropdown', async function () {
+  await loginPage.tapOnEnrollmentDropdown();
+  await storeStepWithScreenshot("Test page", `Tap on enrollment dropdown`, `enrollment dropdown should open`);
+});
 
 
+Then('user select {string} quantity', async function (count) {
+  await loginPage.tapOnEnrollmentCount(count);
+  await storeStepWithScreenshot("Test page", `select ${count}`, `${count} selected`);
+});

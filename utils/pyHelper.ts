@@ -17,10 +17,9 @@ function runPython(pyFile: string, payloadObj: any) {
 }
 
 
-
 // ---------- FINAL REPORT ----------
 export function pythonCreateReport() {
-  const py = path.join(process.cwd(), "utils/test.py");
+  const py = path.join(process.cwd(), "utils/word.py");
 
   runPython(py, { action: "final" });
 }
