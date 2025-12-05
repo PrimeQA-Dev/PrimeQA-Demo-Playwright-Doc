@@ -23,8 +23,8 @@ BeforeAll(async () => {
 
   try {
     console.log("Launching browser before tests...");
-    browser = await chromium.launch({ headless: false });
-    testData.setTestData("headless", "false")
+    browser = await chromium.launch({ headless: true });
+    testData.setTestData("headless", "true")
     
   } catch (error) {
     console.error("Error during BeforeAll hook:", error);
