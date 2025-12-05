@@ -20,7 +20,7 @@ When('user login with {string} and {string}', async function (username, password
   const userName = await getTestDataValue(username)
   const psw = await getTestDataValue(password)
   await loginPage.loginAsRegisteredUser(userName, psw);
-  storeStepWithScreenshot("Open Site", "url open", "url should open properly");
+  await storeStepWithScreenshot("Open Site", "url open", "url should open properly");
   
 });
 

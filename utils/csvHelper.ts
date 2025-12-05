@@ -1,6 +1,10 @@
 import fs from "fs";
 import path from "path";
 import screenshot from "screenshot-desktop";
+import { pageFixture } from "../HooksHelper/pageFixture";
+import sharp from "sharp";
+import { testData} from "../utils/InterTestData"
+
 
 const CSV_PATH = path.join(process.cwd(), "testData/data.csv");
 const SCREENSHOT_DIR = path.join(process.cwd(), "test-output/screenshots");
@@ -25,22 +29,47 @@ export async function storeStepWithScreenshot(step, description, expected) {
   if (stepCounter === 0) {
     resetCSV();
   }
+  const isHeadless = testData.getTestData("headless")
+  const row = ''
 
   stepCounter++;
   const screenshotId = `SC_${String(stepCounter).padStart(3, "0")}`;
   const screenshotPath = path.join(SCREENSHOT_DIR, `${screenshotId}.png`);
 
-  // Take screenshot
-  try {
-    const imgBuffer = await screenshot({ format: "png" });
-    fs.writeFileSync(screenshotPath, imgBuffer);
-    console.log(`[Desktop Screenshot] Saved: ${screenshotPath}`);
-  } catch (err) {
-    console.error("Screenshot failed:", err);
-  }
-
-  // Prepare row (NO DATETIME)
-  const row = `"${step}","${description}","${expected}","${screenshotId}"\n`;
+  if(isHeadless === "true"){
+    // Take screenshot
+    const ts = new Date().toLocaleString().replace(/[/,: ]/g, "-");
+    const screenshot = await pageFixture.page.screenshot({
+      path: screenshotPath,
+      type: "png",
+    });
+    await sharp(screenshotPath)
+      .composite([
+        {
+          input: Buffer.from(`
+            <svg width="800" height="50">
+              <text x="10" y="30" font-size="14" fill="black">${ts}</text>
+            </svg>
+          `),
+          top: 0,
+          left: 0
+        }
+      ])
+      .toFile(screenshotPath.replace(".png", "-stamped.png"));
+      // Prepare row (NO DATETIME)
+    const row = `"${step}","${description}","${expected}","${screenshotId.replace(".png", "-stamped.png")}"\n`;
+    }
+    else{
+      // / Take screenshot
+      try {
+        const imgBuffer = await screenshot({ format: "png" });
+        fs.writeFileSync(screenshotPath, imgBuffer);
+        console.log(`[Desktop Screenshot] Saved: ${screenshotPath}`);
+      } catch (err) {
+        console.error("Screenshot failed:", err);
+      }
+      const row = `"${step}","${description}","${expected}","${screenshotId}"\n`;
+    }
 
   // Ensure CSV exists
   if (!fs.existsSync(CSV_PATH)) {

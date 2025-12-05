@@ -3,6 +3,7 @@ import { Browser, BrowserContext, chromium } from "@playwright/test";
 import { pageFixture } from "./pageFixture";
 import { docManager } from "../utils/utils";
 import { pythonCreateReport } from "../utils/pyHelper";
+import { testData} from "../utils/InterTestData"
 
 import path from "path";
 import fs from "fs";
@@ -22,7 +23,8 @@ BeforeAll(async () => {
 
   try {
     console.log("Launching browser before tests...");
-    browser = await chromium.launch({ headless: true });
+    browser = await chromium.launch({ headless: false });
+    testData.setTestData("headless", "false")
     
   } catch (error) {
     console.error("Error during BeforeAll hook:", error);
