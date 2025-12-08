@@ -23,7 +23,16 @@ jobs:
         with:
           node-version: 18
 
-      - name: 📦 Install Dependencies
+      - name: 🐍 Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 📦 Install Python Dependencies (python-docx)
+        run: |
+          pip install python-docx
+
+      - name: 📦 Install Node Dependencies
         run: npm install --no-fund --no-audit
 
       - name: 🎭 Install Playwright Browsers
@@ -33,6 +42,10 @@ jobs:
         run: |
           mkdir -p test-results
           npx cucumber-js -p all --tags "@smoke3" || echo "❌ Tests failed"
+
+      - name: 📄 Generate Word Reports
+        run: |
+          python utils/word.py '{"action":"final"}'
 
       - name: 📤 Upload Test Artifacts (Word Reports)
         uses: actions/upload-artifact@v4
@@ -69,5 +82,4 @@ jobs:
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: |
-          node utils/emailSender.js
+        run: node utils/emailSender.js
