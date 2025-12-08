@@ -32,7 +32,7 @@ jobs:
       - name: 🛠 Run Smoke Tests
         run: |
           mkdir -p test-results
-          npm run test:smoke || echo "❌ Tests failed"
+          npx cucumber-js -p all --tags "@smoke3" || echo "❌ Tests failed"
 
       - name: 📤 Upload Test Artifacts (Word Reports)
         uses: actions/upload-artifact@v4
