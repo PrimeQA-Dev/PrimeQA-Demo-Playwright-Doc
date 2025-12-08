@@ -9,7 +9,7 @@ on:
 jobs:
 
   # ------------------------------------------------------
-  # 1️⃣ JOB: RUN TESTS + GENERATE DOCX
+  # 1️⃣ JOB: RUN TESTS + GENERATE DOCX REPORTS
   # ------------------------------------------------------
   test:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: 📦 Install Python Dependencies (python-docx + pillow)
+      - name: 📦 Install Python Dependencies
         run: |
           pip install python-docx pillow
 
@@ -43,18 +43,26 @@ jobs:
           mkdir -p test-results
           npx cucumber-js -p all --tags "@smoke3" || echo "❌ Tests failed"
 
+      # ------------------------------------------------------
+      # FIXED: Correct CSV path + repo root working directory
+      # ------------------------------------------------------
       - name: 📝 Generate Word Reports
+        working-directory: .
         run: |
           python utils/word.py '{"action":"final","csv":"TestData/data.csv"}'
 
+      # ------------------------------------------------------
+      # FIXED: Upload actual files created by your Python script
+      # ------------------------------------------------------
       - name: 📤 Upload Test Artifacts (Word Reports)
         uses: actions/upload-artifact@v4
         with:
           name: email-reports
           path: |
-            Summary.docx
-            Details.docx
+            test-output/Automation_Step_Report.docx
+            test-output/Automation_Screenshot_Report.docx
           if-no-files-found: warn
+
 
   # ------------------------------------------------------
   # 2️⃣ JOB: SEND EMAIL USING emailSender.ts
