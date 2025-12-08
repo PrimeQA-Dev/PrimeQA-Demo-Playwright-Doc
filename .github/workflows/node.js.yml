@@ -41,7 +41,7 @@ jobs:
       - name: 🛠 Run Smoke Tests
         run: |
           mkdir -p test-results
-          npx cucumber-js -p all --tags "@smoke3" || echo "❌ Tests failed"
+          npx cucumber-js -p all --tags "@smoke1" || echo "❌ Tests failed"
 
       # ------------------------------------------------------
       # FIXED: Upload actual files created by your Python script
