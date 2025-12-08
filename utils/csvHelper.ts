@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { testData} from "../utils/InterTestData"
 
 
-const CSV_PATH = path.join(process.cwd(), "testData/data.csv");
+const CSV_PATH = path.join(process.cwd(), "TestData/data.csv");
 const SCREENSHOT_DIR = path.join(process.cwd(), "test-output/screenshots");
 
 if (!fs.existsSync(SCREENSHOT_DIR)) {
