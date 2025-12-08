@@ -8,10 +8,13 @@ from docx.oxml.ns import qn
 from PIL import Image
 
 # ------------------ CONFIG ------------------
-CSV_FILE = "testData/data.csv"
-STEP_REPORT_FILE = "test-output/Automation_Step_Report.docx"
-SCREENSHOT_REPORT_FILE = "test-output/Automation_Screenshot_Report.docx"
-SCREENSHOT_DIR = "test-output/screenshots"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # /utils
+ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))  # repo root
+
+CSV_FILE = os.path.join(ROOT_DIR, "testData", "data.csv")
+STEP_REPORT_FILE = os.path.join(ROOT_DIR, "test-output", "Automation_Step_Report.docx")
+SCREENSHOT_REPORT_FILE = os.path.join(ROOT_DIR, "test-output", "Automation_Screenshot_Report.docx")
+SCREENSHOT_DIR = os.path.join(ROOT_DIR, "test-output", "screenshots")
 
 TAG = "Regression"
 ENVIRONMENT = "QA"
