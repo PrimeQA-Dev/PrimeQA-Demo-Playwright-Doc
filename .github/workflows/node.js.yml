@@ -44,14 +44,6 @@ jobs:
           npx cucumber-js -p all --tags "@smoke3" || echo "❌ Tests failed"
 
       # ------------------------------------------------------
-      # FIXED: Correct CSV path + repo root working directory
-      # ------------------------------------------------------
-      - name: 📝 Generate Word Reports
-        working-directory: .
-        run: |
-          python utils/word.py '{"action":"final","csv":"TestData/data.csv"}'
-
-      # ------------------------------------------------------
       # FIXED: Upload actual files created by your Python script
       # ------------------------------------------------------
       - name: 📤 Upload Test Artifacts (Word Reports)
