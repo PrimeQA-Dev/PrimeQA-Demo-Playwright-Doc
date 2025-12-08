@@ -9,7 +9,7 @@ on:
 jobs:
 
   # ------------------------------------------------------
-  # 1️⃣ JOB: RUN TESTS
+  # 1️⃣ JOB: RUN TESTS + GENERATE DOCX
   # ------------------------------------------------------
   test:
     runs-on: ubuntu-latest
@@ -28,9 +28,9 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: 📦 Install Python Dependencies (python-docx)
+      - name: 📦 Install Python Dependencies (python-docx + pillow)
         run: |
-          pip install python-docx
+          pip install python-docx pillow
 
       - name: 📦 Install Node Dependencies
         run: npm install --no-fund --no-audit
@@ -43,7 +43,7 @@ jobs:
           mkdir -p test-results
           npx cucumber-js -p all --tags "@smoke3" || echo "❌ Tests failed"
 
-      - name: 📄 Generate Word Reports
+      - name: 📝 Generate Word Reports
         run: |
           python utils/word.py '{"action":"final"}'
 
@@ -72,7 +72,7 @@ jobs:
         with:
           name: email-reports
 
-      - name: 📦 Install Dependencies
+      - name: 📦 Install Node Dependencies
         run: npm install
 
       - name: 🛠 Compile TypeScript
