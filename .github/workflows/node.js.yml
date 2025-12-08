@@ -45,7 +45,7 @@ jobs:
 
       - name: 📝 Generate Word Reports
         run: |
-          python utils/word.py '{"action":"final"}'
+          python utils/word.py '{"action":"final","csv":"TestData/data.csv"}'
 
       - name: 📤 Upload Test Artifacts (Word Reports)
         uses: actions/upload-artifact@v4
