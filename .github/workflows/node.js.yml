@@ -4,99 +4,70 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
+
+  # ------------------------------------------------------
+  # 1️⃣ JOB: RUN TESTS
+  # ------------------------------------------------------
   test:
     runs-on: ubuntu-latest
 
     steps:
-      # ----------------------------------------------
-      # 1️⃣ Checkout Repo
-      # ----------------------------------------------
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # ----------------------------------------------
-      # 2️⃣ Debug Files at Root
-      # ----------------------------------------------
-      - name: 🔍 Debug Repository Files
-        run: ls -R
-
-      # ----------------------------------------------
-      # 3️⃣ Setup Node.js
-      # ----------------------------------------------
       - name: 🔧 Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      # ----------------------------------------------
-      # 4️⃣ Install Dependencies
-      # ----------------------------------------------
       - name: 📦 Install Dependencies
         run: npm install --no-fund --no-audit
 
-      # ----------------------------------------------
-      # 5️⃣ Install Playwright Browsers
-      # ----------------------------------------------
       - name: 🎭 Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # ----------------------------------------------
-      # 6️⃣ Find testdata.json
-      # ----------------------------------------------
-      - name: 📝 Find testdata.json in Repository
+      - name: 🛠 Run Smoke Tests
         run: |
-          echo "PWD: $(pwd)"
-          find . -type f | grep -i "testdata.json" || echo "⚠️ testdata.json NOT FOUND!"
+          mkdir -p test-results
+          npm run test:smoke || echo "❌ Tests failed"
 
-      # ----------------------------------------------
-      # 7️⃣ Check Git Ignore Status
-      # ----------------------------------------------
-      - name: 🔍 Check if testdata.json is ignored
-        run: |
-          git check-ignore -v ./playwright-automation/TestData/testdata.json || \
-          echo "✅ testdata.json is NOT ignored!"
-
-      # ----------------------------------------------
-      # 8️⃣ Ensure testdata.json is tracked
-      # ----------------------------------------------
-      - name: 📂 Ensure testdata.json is Tracked in Git
-        run: |
-          git ls-files --stage | grep testdata.json || \
-          echo "⚠️ testdata.json NOT tracked by Git!"
-
-      # ----------------------------------------------
-      # 9️⃣ Run Tests
-      # ----------------------------------------------
-      - name: 🛠 Run Smoke Tests with Cucumber & Playwright
-        run: |
-          mkdir -p playwright-automation/test-results
-          npm run test:smoke || echo "❌ Tests failed (continuing for artifacts)"
-
-      # ----------------------------------------------
-      # 🔟 Check Screenshots
-      # ----------------------------------------------
-      - name: 🔍 Check if Screenshots Exist
-        run: |
-          if ls playwright-automation/test-results/*.png 1> /dev/null 2>&1; then
-            echo "✅ Screenshots captured!"
-          else
-            echo "⚠️ No screenshots found!"
-          fi
-
-      # ----------------------------------------------
-      # 1️⃣1️⃣ Upload Artifacts
-      # ----------------------------------------------
-      - name: 📂 Upload Playwright Artifacts (Screenshots & Traces)
+      - name: 📤 Upload Test Artifacts (Word Reports)
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-artifacts
-          path: playwright-automation/test-results/
-          if-no-files-found: ignore
+          name: email-reports
+          path: |
+            Summary.docx
+            Details.docx
+          if-no-files-found: warn
+
+  # ------------------------------------------------------
+  # 2️⃣ JOB: SEND EMAIL USING emailSender.ts
+  # ------------------------------------------------------
+  send_mail:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: 📥 Download Report Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: email-reports
+
+      - name: 📦 Install Dependencies
+        run: npm install
+
+      - name: 🛠 Compile TypeScript
+        run: npx tsc
+
+      - name: ▶️ Run Email Sender Script
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: |
+          node utils/emailSender.js
