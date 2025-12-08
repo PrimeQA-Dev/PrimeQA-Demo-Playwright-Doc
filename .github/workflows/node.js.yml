@@ -7,60 +7,82 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
+      # ----------------------------------------------
+      # 1️⃣ Checkout Repo
+      # ----------------------------------------------
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Ensure all files are checked out
+          fetch-depth: 0
 
+      # ----------------------------------------------
+      # 2️⃣ Debug Files at Root
+      # ----------------------------------------------
       - name: 🔍 Debug Repository Files
         run: ls -R
-        working-directory: PrimeQA-Demo-Playwright-Doc
-        
+
+      # ----------------------------------------------
+      # 3️⃣ Setup Node.js
+      # ----------------------------------------------
       - name: 🔧 Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # ----------------------------------------------
+      # 4️⃣ Install Dependencies
+      # ----------------------------------------------
       - name: 📦 Install Dependencies
         run: npm install --no-fund --no-audit
-        working-directory: PrimeQA-Demo-Playwright-Doc
 
+      # ----------------------------------------------
+      # 5️⃣ Install Playwright Browsers
+      # ----------------------------------------------
       - name: 🎭 Install Playwright Browsers
         run: npx playwright install --with-deps
-        working-directory: PrimeQA-Demo-Playwright-Doc
 
-      # ✅ Find exact testdata.json filename (case-sensitive)
+      # ----------------------------------------------
+      # 6️⃣ Find testdata.json
+      # ----------------------------------------------
       - name: 📝 Find testdata.json in Repository
         run: |
-          echo "Current Working Directory: $(pwd)"
-          find playwright-automation -type f | grep -i "testdata.json" || echo "⚠️ testdata.json NOT FOUND!"
-        working-directory: PrimeQA-Demo-Playwright-Doc
+          echo "PWD: $(pwd)"
+          find . -type f | grep -i "testdata.json" || echo "⚠️ testdata.json NOT FOUND!"
 
-      # ✅ Check if testdata.json is ignored by .gitignore
+      # ----------------------------------------------
+      # 7️⃣ Check Git Ignore Status
+      # ----------------------------------------------
       - name: 🔍 Check if testdata.json is ignored
         run: |
-          git check-ignore -v playwright-automation/TestData/testdata.json || echo "✅ testdata.json is NOT ignored!"
-        working-directory: PrimeQA-Demo-Playwright-Doc
+          git check-ignore -v ./playwright-automation/TestData/testdata.json || \
+          echo "✅ testdata.json is NOT ignored!"
 
-      # ✅ Force add testdata.json if missing
+      # ----------------------------------------------
+      # 8️⃣ Ensure testdata.json is tracked
+      # ----------------------------------------------
       - name: 📂 Ensure testdata.json is Tracked in Git
         run: |
-          git ls-files --stage | grep testdata.json || echo "⚠️ testdata.json NOT tracked by Git!"
-        working-directory: PrimeQA-Demo-Playwright-Doc
+          git ls-files --stage | grep testdata.json || \
+          echo "⚠️ testdata.json NOT tracked by Git!"
 
+      # ----------------------------------------------
+      # 9️⃣ Run Tests
+      # ----------------------------------------------
       - name: 🛠 Run Smoke Tests with Cucumber & Playwright
         run: |
-          mkdir -p playwright-automation/test-results  # Ensure directory exists
-          npm run test:smoke || echo "❌ Tests failed, checking for artifacts..."
-        working-directory: PrimeQA-Demo-Playwright-Doc
+          mkdir -p playwright-automation/test-results
+          npm run test:smoke || echo "❌ Tests failed (continuing for artifacts)"
 
+      # ----------------------------------------------
+      # 🔟 Check Screenshots
+      # ----------------------------------------------
       - name: 🔍 Check if Screenshots Exist
         run: |
           if ls playwright-automation/test-results/*.png 1> /dev/null 2>&1; then
@@ -68,11 +90,13 @@ jobs:
           else
             echo "⚠️ No screenshots found!"
           fi
-        working-directory: PrimeQA-Demo-Playwright-Doc
-      
+
+      # ----------------------------------------------
+      # 1️⃣1️⃣ Upload Artifacts
+      # ----------------------------------------------
       - name: 📂 Upload Playwright Artifacts (Screenshots & Traces)
         uses: actions/upload-artifact@v4
         with:
           name: playwright-artifacts
           path: playwright-automation/test-results/
-          if-no-files-found: ignore  # Prevents failure if no files exist
+          if-no-files-found: ignore
