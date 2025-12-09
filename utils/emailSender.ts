@@ -22,9 +22,8 @@ function prepareEmailBody(date_time_str: string): string {
 async function sendEmailNow() {
   const date_time_str = new Date().toLocaleString();
 
-  const reportHtmlPath = path.join(__dirname, "../test-results/cucumber-report-smoke.html");
-  const wordFile1 = path.join(__dirname, "../test-output/Automation_Step_Report.docx");
-  const wordFile2 = path.join(__dirname, "../test-output/Automation_Screenshot_Report.docx");
+  const stepReport = path.join(process.cwd(), "test-output/Automation_Step_Report.docx");
+  const screenshotReport = path.join(process.cwd(), "test-output/Automation_Screenshot_Report.docx");
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -37,14 +36,6 @@ async function sendEmailNow() {
   const emailBody = prepareEmailBody(date_time_str);
   const attachments: any[] = [];
 
-  // Attach HTML report
-  if (fs.existsSync(reportHtmlPath)) {
-    attachments.push({
-      filename: "TestReport.html",
-      content: fs.readFileSync(reportHtmlPath),
-      contentType: "text/html",
-    });
-  }
 
   // Attach Word file 1
   if (fs.existsSync(wordFile1)) {
