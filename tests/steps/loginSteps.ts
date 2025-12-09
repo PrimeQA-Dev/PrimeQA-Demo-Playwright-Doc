@@ -2,11 +2,7 @@ import {LoginPage} from '../pageobjects/loginPage';
 import {Given, When, Then, setDefaultTimeout} from '@cucumber/cucumber';
 import { pageFixture } from "../../HooksHelper/pageFixture";
 import { getTestDataValue } from '../../utils/testDataReader';
-// import { docCreate,docManager } from '../../utils/';
-// import { pythonStoreStep, pythonCreateReport } from "../../utils/docTest";
 import { storeStepWithScreenshot } from "../../utils/csvHelper";
-
-
 
 
 setDefaultTimeout(100*1000*2);

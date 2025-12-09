@@ -1,5 +1,9 @@
 {
     "url":"https://practicetestautomation.com/practice-test-login/",
     "username":"student",
-    "password":"Password123"
+    "password":"Password123",
+
+    "url1":"https://sauce-demo.myshopify.com/",
+    "username1":"testTry@gmail.com",
+    "password1":"Test@123"
 }
