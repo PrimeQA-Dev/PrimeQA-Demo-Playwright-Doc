@@ -25,7 +25,7 @@ BeforeAll(async () => {
     console.log("Launching browser before tests...");
     const isHeadless = process.env.HEADLESS === "true";
     browser = await chromium.launch({ headless: isHeadless });
-    testData.setTestData("headless", isHeadless)
+    testData.setTestData("headless", process.env.HEADLESS)
     
   } catch (error) {
     console.error("Error during BeforeAll hook:", error);
