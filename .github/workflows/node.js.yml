@@ -40,13 +40,13 @@ jobs:
 
       - name: 🛠 Run Smoke Tests
         run: |
-          mkdir -p test-results
+          mkdir -p test-output
           npx cucumber-js -p all --tags "@smoke1" || echo "❌ Tests failed"
 
       # ------------------------------------------------------
-      # FIXED: Upload actual files created by your Python script
+      # Upload the two DOCX reports generated in test-output/
       # ------------------------------------------------------
-      - name: 📤 Upload Test Artifacts (Word Reports)
+      - name: 📤 Upload Word Report Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: email-reports
@@ -57,7 +57,7 @@ jobs:
 
 
   # ------------------------------------------------------
-  # 2️⃣ JOB: SEND EMAIL USING emailSender.ts
+  # 2️⃣ JOB: SEND EMAIL WITH ATTACHMENTS
   # ------------------------------------------------------
   send_mail:
     needs: test
