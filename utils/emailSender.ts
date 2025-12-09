@@ -7,7 +7,7 @@ const SENDER_PASSWORD = "luda tggu smax vgfx";
 
 const DEFAULT_RECEIVER_EMAIL = "sachin@primeqasolutions.com,primeqa.punya@gmail.com";
 const ARG_RECEIVER = process.argv[2];
-const RECEIVER_EMAIL = ARG_RECEIVER && ARG_RECEIVER.trim() !== "" ? ARG_RECEIVER : DEFAULT_RECEIVER_EMAIL;
+const RECEIVER_EMAIL = (ARG_RECEIVER && ARG_RECEIVER.trim() !== "") ? `${DEFAULT_RECEIVER_EMAIL},${ARG_RECEIVER}`: DEFAULT_RECEIVER_EMAIL;
 
 function prepareEmailBody(date_time_str: string): string {
   return `

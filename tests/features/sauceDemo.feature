@@ -3,7 +3,7 @@ Feature: Sauce Demo
   Background:
     Given user open the source demo url
 
-  @smoke3
+  @saucedemo
   Scenario: Sauce Demo 
     When user tap on login button
     When user login with the "username1" and "password1" for souce demo

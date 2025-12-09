@@ -3,7 +3,7 @@ Feature: Login
   Background:
     Given user open the system url
 
-  @smoke1
+  @practisesite
   Scenario: demo
     When user login with "username" and "password"
     Then user should be logged in successfully
