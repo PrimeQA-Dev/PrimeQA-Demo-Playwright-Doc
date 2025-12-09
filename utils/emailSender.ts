@@ -5,7 +5,7 @@ import path from 'path';
 const SENDER_EMAIL = "automationreport477@gmail.com";
 const SENDER_PASSWORD = "luda tggu smax vgfx";
 
-const DEFAULT_RECEIVER_EMAIL = "sachin@primeqasolutions.com,primeqa.punya@gmail.com";
+const DEFAULT_RECEIVER_EMAIL = "sachin@primeqasolutions.com";
 const ARG_RECEIVER = process.argv[2];
 const RECEIVER_EMAIL = (ARG_RECEIVER && ARG_RECEIVER.trim() !== "") ? `${DEFAULT_RECEIVER_EMAIL},${ARG_RECEIVER}`: DEFAULT_RECEIVER_EMAIL;
 
@@ -15,7 +15,7 @@ function prepareEmailBody(date_time_str: string): string {
     <body style="font-family: Arial; font-size: 14px;">
       <h2>Test Execution Report</h2>
       <p><b>Date:</b> ${date_time_str}</p>
-      <p>Attached files include the HTML report and additional Word documents.</p>
+      <p>Attached files include the Word documents for TestScripts/TestSteps and Screenshots.</p>
     </body>
     </html>
   `;
