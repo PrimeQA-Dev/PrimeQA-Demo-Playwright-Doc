@@ -13,7 +13,7 @@ let browser: Browser;
 let context: BrowserContext;
 
 BeforeAll(async () => {
-  const foldersToClean = ["./test-results/screenshots", "./traces", "./output"];
+  const foldersToClean = ["./test-results/screenshots", "./traces"];
   for (const folder of foldersToClean) {
     if (fs.existsSync(folder)) {
       fs.rmSync(folder, { recursive: true, force: true });
@@ -23,8 +23,9 @@ BeforeAll(async () => {
 
   try {
     console.log("Launching browser before tests...");
-    browser = await chromium.launch({ headless: false });
-    testData.setTestData("headless", "false")
+    const isHeadless = process.env.HEADLESS === "true";
+    browser = await chromium.launch({ headless: isHeadless });
+    testData.setTestData("headless", isHeadless)
     
   } catch (error) {
     console.error("Error during BeforeAll hook:", error);

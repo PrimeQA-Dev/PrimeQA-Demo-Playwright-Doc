@@ -58,17 +58,19 @@ export class SauceDemoPage {
   async tapOnFirstProduct(){
     await expect(pageFixture.page.locator(this.product)).toBeVisible({ timeout: TIMEOUT });
     await pageFixture.page.locator(this.product).click();
+    await pageFixture.page.waitForTimeout(1000);
   }
 
 
   async tapAddToCart(){
-   
+    await pageFixture.page.waitForTimeout(1000);
     await expect(pageFixture.page.locator(this.addToCart)).toBeVisible({ timeout: TIMEOUT });
     await pageFixture.page.locator(this.addToCart).click({ timeout: TIMEOUT });
   }
 
 
   async tapOnCheckout(){
+    await pageFixture.page.waitForTimeout(1000);
     await expect(pageFixture.page.locator(this.checkout)).toBeVisible({ timeout: TIMEOUT });
     await pageFixture.page.locator(this.checkout).click();
   }
@@ -76,7 +78,6 @@ export class SauceDemoPage {
 
   async verifyCartPage(){
     await expect(pageFixture.page.locator(this.myCartPage)).toBeVisible({ timeout: TIMEOUT });
-    await pageFixture.page.locator(this.myCartPage).click();
   }
 
   async tapOnCheckoutButton(){
