@@ -38,19 +38,19 @@ async function sendEmailNow() {
 
 
   // Attach Word file 1
-  if (fs.existsSync(wordFile1)) {
+  if (fs.existsSync(stepReport)) {
     attachments.push({
       filename: "Summary.docx",
-      content: fs.readFileSync(wordFile1),
+      content: fs.readFileSync(stepReport),
       contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
   }
 
   // Attach Word file 2
-  if (fs.existsSync(wordFile2)) {
+  if (fs.existsSync(screenshotReport)) {
     attachments.push({
-      filename: "Details.docx",
-      content: fs.readFileSync(wordFile2),
+      filename: "Screenshot.docx",
+      content: fs.readFileSync(screenshotReport),
       contentType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     });
   }
