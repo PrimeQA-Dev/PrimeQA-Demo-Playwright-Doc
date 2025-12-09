@@ -5,7 +5,7 @@ import path from "path";
 function runPython(pyFile: string, payloadObj: any) {
   const payload = JSON.stringify(payloadObj).replace(/"/g, '\\"');
 
-  const command = `python "${pyFile}" "${payload}"`;
+  const command = `python3 "${pyFile}" "${payload}"`;
 
   console.log("Executing:", command);
 
